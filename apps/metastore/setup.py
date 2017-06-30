@@ -24,6 +24,6 @@ setup(
       description = "Metastore browser",
       packages = find_packages('src'),
       package_dir = {'': 'src'},
-      install_requires = ['setuptools', 'desktop'],
+      install_requires = ['setuptools', 'desktop', 'crontab'],
       entry_points = { 'desktop.sdk.application': 'metastore=metastore' },
 )

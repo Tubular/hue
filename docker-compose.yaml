@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+    dev:
+        build:
+            context: .
+            dockerfile: hue.dockerfile
+        ports:
+            - 9999:9999
+        volumes:
+            - .:/code
+              # - ./apps/metastore/src:/hue/apps/metastore/src

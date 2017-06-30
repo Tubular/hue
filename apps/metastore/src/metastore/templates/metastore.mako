@@ -355,6 +355,60 @@ ${ components.menubar(is_embeddable) }
   <!-- /ko -->
 </script>
 
+
+<script type="text/html" id="metastore-table-health">
+  <!-- ko if: tableDetails() && ! tableDetails().is_view -->
+    <!-- ko with: tableHealth -->
+    <h4>${ _('Health') }</h4>
+    <div class="row-fluid">
+      <!-- ko with: $parent.tableHealth -->
+
+      <!-- ko if: status == 'unknown' -->
+      <div class="btn">${_('Unknown')}</div>
+      <!-- /ko -->
+
+      <!-- ko if: status == 'healthy' -->
+      <div class="btn btn-success">
+        ${_('Last update was')}
+        <span data-bind="text: last_update_ago.days"></span> day(s)
+        <span data-bind="text: last_update_ago.hours"></span> hour(s) ago <br/>
+        (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
+      </div>
+      <!-- /ko -->
+
+      <!-- ko if: status == 'unhealthy' -->
+      <div class="btn btn-danger">
+        ${_('Last update was')}
+        <span data-bind="text: last_update_ago.days"></span> day(s)
+        <span data-bind="text: last_update_ago.hours"></span> hour(s) ago <br/>
+        (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
+      </div>
+      <!-- /ko -->
+
+      <!-- ko if: status !== 'unknown' -->
+      <div>
+        <strong>${_('Expected schedule')}:</strong> <br/>
+        <i class="fa fa-fw fa-clock-o muted"></i>
+        <strong>${_('Previous')}</strong>
+        <span data-bind="text: last_update_expected_ago.days"></span> day(s)
+        <span data-bind="text: last_update_expected_ago.hours"></span> hour(s) ago <br/>
+        (<span data-bind="text: localeFormat(last_update_expected * 1000)"></span>)
+        <br/>
+        <i class="fa fa-fw fa-clock-o muted"></i>
+        <strong>${_('Next')}</strong>
+        <span data-bind="text: next_update_expected_ago.days"></span> day(s)
+        <span data-bind="text: next_update_expected_ago.hours"></span> hour(s)<br/>
+        (<span data-bind="text: localeFormat(next_update_expected * 1000)"></span>)
+      </div>
+      <!-- /ko -->
+
+      <!-- /ko -->
+    </div>
+    <!-- /ko -->
+  <!-- /ko -->
+</script>
+
+
 <script type="text/html" id="metastore-databases">
   <div class="actionbar-actions" data-bind="dockable: { scrollable: '${ MAIN_SCROLLABLE }', nicescroll: true, jumpCorrection: 5, topSnap: '${ TOP_SNAP }' }">
     <input class="input-xlarge search-query margin-left-10" type="text" placeholder="${ _('Search for a database...') }" data-bind="clearable: databaseQuery, value: databaseQuery, valueUpdate: 'afterkeydown'"/>
@@ -663,6 +717,9 @@ ${ components.menubar(is_embeddable) }
     </div>
     <div class="span3 tile">
       <!-- ko template: 'metastore-table-stats' --><!-- /ko -->
+    </div>
+    <div class="span3 tile">
+      <!-- ko template: 'metastore-table-health' --><!-- /ko -->
     </div>
     <!-- ko if: $root.navigatorEnabled() && navigatorStats() -->
     <div class="span6 tile">
