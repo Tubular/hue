@@ -275,7 +275,7 @@ def _get_table_health_status(table):
     expected_next_run_ago = timedelta(seconds=CronTab(cron_schedule).next())
     expected_next_run = datetime.utcnow() + expected_next_run_ago
 
-    if last_update < expected_previous_run:
+    if last_update < expected_previous_run - timedelta(hours=1):
       status = 'unhealthy'
     else:
       status = 'healthy'
