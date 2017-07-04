@@ -260,21 +260,22 @@ def get_table_metadata(request, database, table):
   return JsonResponse(response)
 
 
-def _get_table_health_status(table):
+def _get_table_health_status(table, at_time=None):
   """Returns table health status."""
+  at_time = at_time or datetime.utcnow()
   last_update = datetime.utcfromtimestamp(
     float(table.details['stats']['transient_lastDdlTime'])
   )
-  last_update_ago = datetime.utcnow() - last_update
+  last_update_ago = at_time - last_update
   cron_schedule = table.details['stats'].get('cron_schedule', 'unknown')
   if cron_schedule == 'unknown':
     return {'status': 'unknown'}
   else:
     expected_previous_run_ago = timedelta(seconds=-CronTab(cron_schedule).previous())
-    expected_previous_run = datetime.utcnow() - expected_previous_run_ago
+    expected_previous_run = at_time - expected_previous_run_ago
 
     expected_next_run_ago = timedelta(seconds=CronTab(cron_schedule).next())
-    expected_next_run = datetime.utcnow() + expected_next_run_ago
+    expected_next_run = at_time + expected_next_run_ago
 
     if last_update < expected_previous_run - timedelta(hours=1):
       status = 'unhealthy'

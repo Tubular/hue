@@ -25,4 +25,7 @@ docker-compose run --service-ports dev /bin/bash
 # update code anytime you want, this will also automatically restart server
 # Note: atm sync.sh only copies config ini file and apps/metastore which we modified
 >> ./sync.sh
+
+# advice: run only our tests, example:
+>>./build/env/bin/hue test specific metastore.tests.metastore.views_test:TestViews.test_warehouse_healt
 ```

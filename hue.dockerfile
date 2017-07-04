@@ -43,5 +43,3 @@ RUN apt-get install -y tmux
 EXPOSE 9999
 VOLUME /hue/desktop/
 COPY desktop/conf/pseudo-distributed.ini.tmpl /hue/desktop/conf/pseudo-distributed.ini
-
-
