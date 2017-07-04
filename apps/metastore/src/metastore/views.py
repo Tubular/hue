@@ -261,6 +261,7 @@ def get_table_metadata(request, database, table):
 
 
 def _get_table_health_status(table):
+  """Returns table health status."""
   last_update = datetime.utcfromtimestamp(
     float(table.details['stats']['transient_lastDdlTime'])
   )

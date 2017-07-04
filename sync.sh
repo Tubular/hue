@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
-cp /code/apps/metastore/src/metastore/views.py /hue/apps/metastore/src/metastore/views.py
-cp /code/apps/metastore/src/metastore/static/metastore/js/metastore.model.js /hue/apps/metastore/src/metastore/static/metastore/js/metastore.model.js
-cp /code/apps/metastore/src/metastore/templates/metastore.mako /hue/apps/metastore/src/metastore/templates/metastore.mako
+#TODO: this is too stupid, let's improve this
+cp -f /code/sync.sh /hue/sync.sh
+cp -f /code/run_server.sh /hue/run_server.sh
+cp -f /code/desktop/conf/tubular.ini /hue/desktop/conf/pseudo-distributed.ini
+cp -rf /code/apps/metastore/ /hue/apps/
+
+
