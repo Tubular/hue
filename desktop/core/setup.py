@@ -23,7 +23,7 @@ setup(
       description = "Hue core",
       packages = find_packages('src'),
       package_dir = {'': 'src'},
-      install_requires = ['setuptools', 'crontab'],
+      install_requires = ['setuptools'],
 
       entry_points = { 'console_scripts': [ 'supervisor = desktop.supervisor:main',
                                             'hue = desktop.manage_entry:entry', ],
