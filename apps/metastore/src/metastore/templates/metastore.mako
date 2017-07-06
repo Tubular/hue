@@ -370,8 +370,13 @@ ${ components.menubar(is_embeddable) }
       <!-- ko if: status == 'healthy' -->
       <div class="btn btn-success">
         ${_('Last update was')}
+        <!-- ko if: last_update_ago.days > 0 -->
         <span data-bind="text: last_update_ago.days"></span> day(s)
-        <span data-bind="text: last_update_ago.hours"></span> hour(s) ago <br/>
+        <!-- /ko -->
+        <!-- ko if: last_update_ago.hours > 0 -->
+        <span data-bind="text: last_update_ago.hours"></span> hour(s)
+        <!-- /ko -->
+        ago <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>
       <!-- /ko -->
@@ -379,8 +384,13 @@ ${ components.menubar(is_embeddable) }
       <!-- ko if: status == 'unhealthy' -->
       <div class="btn btn-danger">
         ${_('Last update was')}
+        <!-- ko if: last_update_ago.days > 0 -->
         <span data-bind="text: last_update_ago.days"></span> day(s)
-        <span data-bind="text: last_update_ago.hours"></span> hour(s) ago <br/>
+        <!-- /ko -->
+        <!-- ko if: last_update_ago.hours > 0 -->
+        <span data-bind="text: last_update_ago.hours"></span> hour(s)
+        <!-- /ko -->
+        ago <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>
       <!-- /ko -->
@@ -390,14 +400,22 @@ ${ components.menubar(is_embeddable) }
         <strong>${_('Expected schedule')}:</strong> <br/>
         <i class="fa fa-fw fa-clock-o muted"></i>
         <strong>${_('Previous')}</strong>
+        <!-- ko if: last_update_expected_ago.days > 0 -->
         <span data-bind="text: last_update_expected_ago.days"></span> day(s)
+        <!-- /ko -->
+        <!-- ko if: last_update_expected_ago.hours > 0 -->
         <span data-bind="text: last_update_expected_ago.hours"></span> hour(s) ago <br/>
+        <!-- /ko -->
         (<span data-bind="text: localeFormat(last_update_expected * 1000)"></span>)
         <br/>
-        <i class="fa fa-fw fa-clock-o muted"></i>
-        <strong>${_('Next')}</strong>
+        <i class="fa fa-fw fa-clock-o muted" ></i>
+        <strong>${_('Next in')}</strong>
+        <!-- ko if: next_update_expected_ago.days > 0 -->
         <span data-bind="text: next_update_expected_ago.days"></span> day(s)
+        <!-- /ko -->
+        <!-- ko if: next_update_expected_ago.hours > 0 -->
         <span data-bind="text: next_update_expected_ago.hours"></span> hour(s)<br/>
+        <!-- /ko -->
         (<span data-bind="text: localeFormat(next_update_expected * 1000)"></span>)
       </div>
       <!-- /ko -->
