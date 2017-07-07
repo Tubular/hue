@@ -30,6 +30,10 @@ from desktop.lib.i18n import smart_str
 from desktop.lib.django_util import JsonResponse
 from desktop.models import Document2, Document
 
+from beeswax.server import dbms
+
+from metastore.views import get_table_health_status
+
 from notebook.connectors.base import get_api, Notebook, QueryExpired, SessionExpired, QueryError, _get_snippet_name
 from notebook.connectors.hiveserver2 import HS2Api
 from notebook.connectors.oozie_batch import OozieApi
@@ -564,6 +568,15 @@ def autocomplete(request, server=None, database=None, table=None, column=None, n
     response.update(autocomplete_data)
   except QueryExpired:
     pass
+
+  # append table health data
+  if database and not table:
+    db = dbms.get(request.user)
+
+    for table in response['tables_meta']:
+        db_table = db.get_table(database, table['name'])
+        health = get_table_health_status(db_table)
+        table['health'] = health['status']
 
   response['status'] = 0
 

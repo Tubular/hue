@@ -117,6 +117,7 @@ var MetastoreDatabase = (function () {
             database: self,
             name: tableMeta.name,
             type: tableMeta.type,
+            health: tableMeta.health,
             comment: tableMeta.comment,
             optimizerEnabled: optimizerEnabled,
             navigatorEnabled: navigatorEnabled,
@@ -384,6 +385,7 @@ var MetastoreTable = (function () {
     self.sourceType = options.sourceType;
     self.name = options.name;
     self.type = options.type;
+    self.health = options.health;
 
     self.optimizerStats = ko.observable();
     self.optimizerDetails = ko.observable();

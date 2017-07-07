@@ -260,7 +260,7 @@ def get_table_metadata(request, database, table):
   return JsonResponse(response)
 
 
-def _get_table_health_status(table, at_time=None):
+def get_table_health_status(table, at_time=None):
   """Returns table health status."""
   at_time = at_time or datetime.utcnow()
   last_update = datetime.utcfromtimestamp(
@@ -325,7 +325,7 @@ def describe_table(request, database, table):
         'properties': table.properties,
         'details': table.details,
         'stats': table.stats,
-        'health': _get_table_health_status(table),
+        'health': get_table_health_status(table),
     })
   else:  # Render HTML
     renderable = "metastore.mako"
@@ -356,7 +356,7 @@ def describe_table(request, database, table):
       'navigator_url': get_navigator_url(),
       'is_embeddable': request.REQUEST.get('is_embeddable', False),
       'source_type': _get_servername(db),
-      'health': _get_table_health_status(table),
+      'health': get_table_health_status(table),
     })
 
 

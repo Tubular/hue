@@ -364,32 +364,28 @@ ${ components.menubar(is_embeddable) }
       <!-- ko with: $parent.tableHealth -->
 
       <!-- ko if: status == 'unknown' -->
-      <div class="btn">${_('Unknown')}</div>
+      <div class="label">${_('Unknown')}</div>
       <!-- /ko -->
 
       <!-- ko if: status == 'healthy' -->
-      <div class="btn btn-success">
+      <div class="label label-success">
         ${_('Last update was')}
         <!-- ko if: last_update_ago.days > 0 -->
         <span data-bind="text: last_update_ago.days"></span> day(s)
         <!-- /ko -->
-        <!-- ko if: last_update_ago.hours > 0 -->
         <span data-bind="text: last_update_ago.hours"></span> hour(s)
-        <!-- /ko -->
         ago <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>
       <!-- /ko -->
 
       <!-- ko if: status == 'unhealthy' -->
-      <div class="btn btn-danger">
+      <div class="label label-warning">
         ${_('Last update was')}
         <!-- ko if: last_update_ago.days > 0 -->
         <span data-bind="text: last_update_ago.days"></span> day(s)
         <!-- /ko -->
-        <!-- ko if: last_update_ago.hours > 0 -->
         <span data-bind="text: last_update_ago.hours"></span> hour(s)
-        <!-- /ko -->
         ago <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>
@@ -397,25 +393,12 @@ ${ components.menubar(is_embeddable) }
 
       <!-- ko if: status !== 'unknown' -->
       <div>
-        <strong>${_('Expected schedule')}:</strong> <br/>
-        <i class="fa fa-fw fa-clock-o muted"></i>
-        <strong>${_('Previous')}</strong>
-        <!-- ko if: last_update_expected_ago.days > 0 -->
-        <span data-bind="text: last_update_expected_ago.days"></span> day(s)
-        <!-- /ko -->
-        <!-- ko if: last_update_expected_ago.hours > 0 -->
-        <span data-bind="text: last_update_expected_ago.hours"></span> hour(s) ago <br/>
-        <!-- /ko -->
-        (<span data-bind="text: localeFormat(last_update_expected * 1000)"></span>)
-        <br/>
         <i class="fa fa-fw fa-clock-o muted" ></i>
         <strong>${_('Next in')}</strong>
         <!-- ko if: next_update_expected_ago.days > 0 -->
         <span data-bind="text: next_update_expected_ago.days"></span> day(s)
         <!-- /ko -->
-        <!-- ko if: next_update_expected_ago.hours > 0 -->
         <span data-bind="text: next_update_expected_ago.hours"></span> hour(s)<br/>
-        <!-- /ko -->
         (<span data-bind="text: localeFormat(next_update_expected * 1000)"></span>)
       </div>
       <!-- /ko -->
@@ -430,43 +413,6 @@ ${ components.menubar(is_embeddable) }
 <script type="text/html" id="metastore-databases">
   <div class="actionbar-actions" data-bind="dockable: { scrollable: '${ MAIN_SCROLLABLE }', nicescroll: true, jumpCorrection: 5, topSnap: '${ TOP_SNAP }' }">
     <input class="input-xlarge search-query margin-left-10" type="text" placeholder="${ _('Search for a database...') }" data-bind="clearable: databaseQuery, value: databaseQuery, valueUpdate: 'afterkeydown'"/>
-    % if has_write_access:
-      <button class="btn toolbarBtn margin-left-20" title="${_('Drop the selected databases')}" data-bind="click: function () { $('#dropDatabase').modal('show'); }, disable: selectedDatabases().length === 0"><i class="fa fa-times"></i>  ${_('Drop')}</button>
-      <div id="dropDatabase" class="modal hide fade">
-
-      % if is_embeddable:
-        <form action="/metastore/databases/drop" data-bind="submit: dropAndWatch" method="POST">
-          <input type="hidden" name="is_embeddable" value="true"/>
-          <input type="hidden" name="start_time" value=""/>
-      % else:
-        <form id="dropDatabaseForm" action="/metastore/databases/drop" method="POST">
-      % endif
-          ${ csrf_token(request) | n,unicode }
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="${ _('Close') }"><span aria-hidden="true">&times;</span></button>
-            <h2 id="dropDatabaseMessage" class="modal-title">${ _('Do you really want to delete the following database(s)?') }</h2>
-          </div>
-          <div class="modal-body">
-            <ul data-bind="foreach: selectedDatabases">
-              <li>
-                <span data-bind="text: name"></span>
-                <!-- ko if: $data.tables().length > 0 -->
-                    (<span data-bind="text: $data.tables().length"></span> tables)
-                <!-- /ko -->
-              </li>
-            </ul>
-          </div>
-          <div class="modal-footer">
-            <div class="label label-important margin-top-5 pull-left">${ _('Warning: This will drop all tables and objects within the database.') }</div>
-            <input type="button" class="btn" data-dismiss="modal" value="${_('No')}">
-            <input type="submit" class="btn btn-danger" value="${_('Yes')}"/>
-          </div>
-          <!-- ko foreach: selectedDatabases -->
-          <input type="hidden" name="database_selection" data-bind="value: name" />
-          <!-- /ko -->
-        </form>
-      </div>
-    % endif
   </div>
   <table id="databasesTable" class="table table-condensed datatables" style="margin-bottom: 10px" data-bind="visible: filteredDatabases().length > 0">
     <thead>
@@ -547,10 +493,7 @@ ${ components.menubar(is_embeddable) }
           <button class="btn toolbarBtn" title="${_('Query the selected table')}" data-bind="click: function () { IS_HUE_4 ? queryAndWatch('/notebook/browse/' + name + '/' + selectedTables()[0].name + '/', $root.sourceType()) : location.href = '/notebook/browse/' + name + '/' + selectedTables()[0].name; }, disable: selectedTables().length !== 1">
             <i class="fa fa-play fa-fw"></i> ${_('Query')}
           </button>
-          % if has_write_access:
-            <button id="dropBtn" class="btn toolbarBtn" title="${_('Delete the selected tables')}" data-bind="click: function () { $('#dropTable').modal('show'); }, disable: selectedTables().length === 0"><i class="fa fa-times"></i>  ${_('Drop')}</button>
-          % endif
-        </div>
+       </div>
 
         <table id="tablesTable" class="table table-condensed table-nowrap" style="margin-bottom: 10px; width: 100%" data-bind="visible: filteredTables().length > 0">
           <thead>
@@ -563,6 +506,7 @@ ${ components.menubar(is_embeddable) }
             <th width="10%">${ _('Popularity') }</th>
             <th width="10%">${ _('Columns') }</th>
             <!-- /ko -->
+            <th width="1%">${ _('Health') }</th>
             <th width="1%">${ _('Type') }</th>
           </tr>
           </thead>
@@ -590,6 +534,20 @@ ${ components.menubar(is_embeddable) }
                 <td></td>
               <!-- /ko -->
               <!-- /ko -->
+
+              <td class="center">
+                <!-- ko if: health == 'unknown' -->
+                <div class="label">unknown</div>
+                <!-- /ko -->
+
+                <!-- ko if: health == 'healthy' -->
+                <div class="label label-success">healthy</div>
+                <!-- /ko -->
+
+                <!-- ko if: health == 'unhealthy' -->
+                <div class="label label-warning">unhealthy</div>
+                <!-- /ko -->
+              </td>
 
               <td class="center">
                 <!-- ko ifnot: $root.optimizerEnabled && optimizerStats() -->
@@ -701,14 +659,7 @@ ${ components.menubar(is_embeddable) }
   <div class="inline-block pull-right">
     <!-- ko with: database -->
     <!-- ko with: table -->
-    % if USE_NEW_EDITOR.get():
-    <!-- ko if: IS_HUE_4 -->
-      <a class="inactive-action" data-bind="tooltip: { placement: 'bottom', delay: 750 }, click: function() { queryAndWatch('/notebook/browse/' + database.name + '/' + name + '/', $root.sourceType()); }" title="${_('Query the table')}" href="javascript:void(0)"><i class="fa fa-play fa-fw"></i></a>
-    <!-- /ko -->
-    <!-- ko if: ! IS_HUE_4 -->
-      <a class="inactive-action" data-bind="tooltip: { placement: 'bottom', delay: 750 }, attr: { 'href': '/notebook/browse/' + database.name + '/' + name }" title="${_('Query the table')}"><i class="fa fa-play fa-fw"></i></a>
-    <!-- /ko -->
-    % else:
+    % if not USE_NEW_EDITOR.get():
       <a class="inactive-action" data-bind="tooltip: { placement: 'bottom', delay: 750 }, attr: { 'href': '/metastore/table/'+ database.name + '/' + name + '/read' }" title="${_('Browse Data')}"><i class="fa fa-play fa-fw"></i></a>
     % endif
     <a class="inactive-action" data-bind="tooltip: { placement: 'bottom', delay: 750 }, click: function () { huePubSub.publish('assist.db.refresh', { sourceType: $root.sourceType() }); }" title="${_('Refresh')}" href="javascript:void(0)"><i class="pointer fa fa-refresh fa-fw" data-bind="css: { 'fa-spin blue' : $root.reloading }"></i></a>
