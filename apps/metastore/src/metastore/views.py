@@ -264,7 +264,10 @@ def get_table_health_status(table, at_time=None):
   """Returns table health status."""
   at_time = at_time or datetime.utcnow()
   last_update = datetime.utcfromtimestamp(
-    float(table.details['stats']['transient_lastDdlTime'])
+    float(
+        table.details['stats'].get('last_castor_run_ts') or
+        table.details['stats']['transient_lastDdlTime']
+    )
   )
   last_update_ago = at_time - last_update
   cron_schedule = table.details['stats'].get('cron_schedule', 'unknown')
