@@ -42,4 +42,4 @@ RUN make apps
 RUN apt-get install -y tmux
 EXPOSE 9999
 VOLUME /hue/desktop/
-COPY desktop/conf/pseudo-distributed.ini.tmpl /hue/desktop/conf/pseudo-distributed.ini
+COPY desktop/conf/pseudo-distributed.ini.tmpl /opt/hue/desktop/conf/pseudo-distributed.ini
