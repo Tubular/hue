@@ -261,7 +261,24 @@ def get_table_metadata(request, database, table):
 
 
 def get_table_health_status(table, at_time=None):
-  """Returns table health status."""
+  """Returns table health status.
+
+  We calculate table health based on specific metadata feilds.
+  We rely on next fields:
+    * last_castor_run_ts - timestamp of last update, set by tool-castor.
+    * transient_lastDdlTime - timestamp of last update, set by Hive on each table update (fallback).
+    * cron_schedule - cron definition of planned update schedule.
+
+  Based on this field, the function calculates status base on difference between planned update
+  time and actual update time.
+
+  Args:
+    table (Table): HMS table
+    at_time (datetime): for which time to calculate health, default: utc now.
+
+  Returns:
+      dict: table status and other useful scheduling data.
+  """
   at_time = at_time or datetime.utcnow()
   last_update = datetime.utcfromtimestamp(
     float(

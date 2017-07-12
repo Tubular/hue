@@ -1,9 +1,10 @@
-# WHY
+# Why
 We made this fork to extend Hue UI with our custom logic of monitoring warehouse datasets health.
 
-# DEVELOPMENT
+# Development
+
 ## Build
-This will take a while (15-20min)so you don't want to execute this each time, also mounting volume makes it
+This will take a while (15-20min) so you don't want to execute this each time, also mounting volume makes it
 too slow (couple hours) so we don't mount volumes from host system to build directory /hue.
 We mount it sparately to /code.
 ```
