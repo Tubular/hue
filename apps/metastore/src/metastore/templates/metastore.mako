@@ -355,13 +355,58 @@ ${ components.menubar(is_embeddable) }
   <!-- /ko -->
 </script>
 
+
+<script type="text/html" id="metastore-table-health">
+  <!-- ko if: tableDetails() && ! tableDetails().is_view -->
+    <!-- ko with: tableHealth -->
+    <h4>${ _('Health') }</h4>
+    <div class="row-fluid">
+      <!-- ko with: $parent.tableHealth -->
+
+      <!-- ko if: status == 'unknown' -->
+      <div class="label">${_('Unknown')}</div>
+      <!-- /ko -->
+
+      <!-- ko if: status == 'healthy' -->
+      <div class="label label-success">
+        ${_('Last update was')}
+        <span data-bind="text: last_update_ago.formatted"></span>
+        <br/>
+        (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
+      </div>
+      <!-- /ko -->
+
+      <!-- ko if: status == 'unhealthy' -->
+      <div class="label label-warning">
+        ${_('Last update was')}
+        <span data-bind="text: last_update_ago.formatted"></span>
+        <br/>
+        (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
+      </div>
+      <!-- /ko -->
+
+      <!-- ko if: status !== 'unknown' -->
+      <div>
+        <i class="fa fa-fw fa-clock-o muted" ></i>
+        <strong>${_('Next in')}</strong>
+        <span data-bind="text: next_update_expected_ago.formatted"></span>
+        (<span data-bind="text: localeFormat(next_update_expected * 1000)"></span>)
+      </div>
+      <!-- /ko -->
+
+      <!-- /ko -->
+    </div>
+    <!-- /ko -->
+  <!-- /ko -->
+</script>
+
+
 <script type="text/html" id="metastore-databases">
   <div class="actionbar-actions" data-bind="dockable: { scrollable: '${ MAIN_SCROLLABLE }', nicescroll: true, jumpCorrection: 5, topSnap: '${ TOP_SNAP }' }">
     <input class="input-xlarge search-query margin-left-10" type="text" placeholder="${ _('Search for a database...') }" data-bind="clearable: databaseQuery, value: databaseQuery, valueUpdate: 'afterkeydown'"/>
     % if has_write_access:
       <button class="btn toolbarBtn margin-left-20" title="${_('Drop the selected databases')}" data-bind="click: function () { $('#dropDatabase').modal('show'); }, disable: selectedDatabases().length === 0"><i class="fa fa-times"></i>  ${_('Drop')}</button>
       <div id="dropDatabase" class="modal hide fade">
-
       % if is_embeddable:
         <form action="/metastore/databases/drop" data-bind="submit: dropAndWatch" method="POST">
           <input type="hidden" name="is_embeddable" value="true"/>
@@ -479,6 +524,7 @@ ${ components.menubar(is_embeddable) }
             <button id="dropBtn" class="btn toolbarBtn" title="${_('Delete the selected tables')}" data-bind="click: function () { $('#dropTable').modal('show'); }, disable: selectedTables().length === 0"><i class="fa fa-times"></i>  ${_('Drop')}</button>
           % endif
         </div>
+       </div>
 
         <table id="tablesTable" class="table table-condensed table-nowrap" style="margin-bottom: 10px; width: 100%" data-bind="visible: filteredTables().length > 0">
           <thead>
@@ -491,6 +537,7 @@ ${ components.menubar(is_embeddable) }
             <th width="10%">${ _('Popularity') }</th>
             <th width="10%">${ _('Columns') }</th>
             <!-- /ko -->
+            <th width="1%">${ _('Health') }</th>
             <th width="1%">${ _('Type') }</th>
           </tr>
           </thead>
@@ -518,6 +565,24 @@ ${ components.menubar(is_embeddable) }
                 <td></td>
               <!-- /ko -->
               <!-- /ko -->
+
+              <td class="center">
+                <!-- ko if: health == 'loading' -->
+                <div class="label">loading...</div>
+                <!-- /ko -->
+
+                <!-- ko if: health == 'unknown' -->
+                <div class="label label-info">unknown</div>
+                <!-- /ko -->
+
+                <!-- ko if: health == 'healthy' -->
+                <div class="label label-success">healthy</div>
+                <!-- /ko -->
+
+                <!-- ko if: health == 'unhealthy' -->
+                <div class="label label-warning">unhealthy</div>
+                <!-- /ko -->
+              </td>
 
               <td class="center">
                 <!-- ko ifnot: $root.optimizerEnabled && optimizerStats() -->
@@ -663,6 +728,9 @@ ${ components.menubar(is_embeddable) }
     </div>
     <div class="span3 tile">
       <!-- ko template: 'metastore-table-stats' --><!-- /ko -->
+    </div>
+    <div class="span3 tile">
+      <!-- ko template: 'metastore-table-health' --><!-- /ko -->
     </div>
     <!-- ko if: $root.navigatorEnabled() && navigatorStats() -->
     <div class="span6 tile">

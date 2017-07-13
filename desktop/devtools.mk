@@ -26,7 +26,8 @@ DEVTOOLS += \
 	nosetty[0.4] \
 	werkzeug[0.6] \
 	windmill[1.3] \
-	pylint[0.28.0]
+	pylint[0.28.0] \
+	crontab
 
 # Install/download dev tools for SDK into the virtual environment
 .PHONY: $(DEVTOOLS)

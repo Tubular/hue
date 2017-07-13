@@ -30,6 +30,7 @@ class Command(NoArgsCommand):
   def handle_noargs(self, **options):
     print 'Starting document conversions...\n'
     try:
+      transaction.set_autocommit(True)
       with transaction.atomic():
         users = User.objects.all()
         logging.info("Starting document conversions for %d users" % len(users))
@@ -45,5 +46,7 @@ class Command(NoArgsCommand):
             print >> sys.stderr, 'Failed to import %d document(s) for user: %s - %s' % (len(converter.failed_doc_ids), user.username, converter.failed_doc_ids)
     except Exception, e:
       logging.exception("Failed to execute the document conversions.")
+    finally:
+      transaction.set_autocommit(False)
 
     print 'Finished running document conversions.\n'

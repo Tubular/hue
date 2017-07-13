@@ -18,6 +18,10 @@
 import json
 import logging
 import urllib
+from datetime import datetime, timedelta
+import calendar
+
+from crontab import CronTab
 
 from django.db.models import Q
 from django.core.urlresolvers import reverse
@@ -256,6 +260,97 @@ def get_table_metadata(request, database, table):
   return JsonResponse(response)
 
 
+def table_health(request, database, table):
+    db = dbms.get(request.user)
+    db_table = db.get_table(database, table)
+    return JsonResponse({
+        'table': table,
+        'health': get_table_health_status(db_table),
+    })
+
+
+def get_table_health_status(table, at_time=None):
+  """Returns table health status.
+
+  We calculate table health based on specific metadata feilds.
+  We rely on next fields:
+    * last_castor_run_ts - timestamp of last update, set by tool-castor.
+    * transient_lastDdlTime - timestamp of last update, set by Hive on each table update (fallback).
+    * cron_schedule - cron definition of planned update schedule.
+
+  Based on this field, the function calculates status base on difference between planned update
+  time and actual update time.
+
+  Args:
+    table (Table): HMS table
+    at_time (datetime): for which time to calculate health, default: utc now.
+
+  Returns:
+      dict: table status and other useful scheduling data.
+  """
+  at_time = at_time or datetime.utcnow()
+  last_update = datetime.utcfromtimestamp(
+    float(
+        table.details['stats'].get('last_castor_run_ts') or
+        table.details['stats']['transient_lastDdlTime']
+    )
+  )
+  last_update_ago = at_time - last_update
+  cron_schedule = table.details['stats'].get('cron_schedule', 'unknown')
+  if cron_schedule == 'unknown':
+    return {'status': 'unknown'}
+  else:
+    expected_previous_run_ago = timedelta(seconds=-CronTab(cron_schedule).previous())
+    expected_previous_run = at_time - expected_previous_run_ago
+
+    expected_next_run_ago = timedelta(seconds=CronTab(cron_schedule).next())
+    expected_next_run = at_time + expected_next_run_ago
+
+    if last_update < expected_previous_run - timedelta(hours=1):
+      status = 'unhealthy'
+    else:
+      status = 'healthy'
+
+    def _s(n, one, many):
+        if n == 0:
+            return ''
+        elif n == 1:
+            return '{} {}'.format(n, one)
+        else:
+            return '{} {}'.format(n, many)
+
+    def format_time(days, hours):
+        if days == 0 and hours == 0:
+            return 'a few minutes'
+        parts = [_s(days, 'day', 'days'), _s(hours, 'hour', 'hours')]
+        return ' '.join(filter(None, parts)) + ' ago'
+
+    return {
+      'status': status,
+      'last_update_expected': calendar.timegm(expected_previous_run.utctimetuple()),
+      'last_update_expected_ago': {
+        'days': expected_previous_run_ago.days,
+        'hours': expected_previous_run_ago.seconds // 3600,
+        'formatted': format_time(expected_previous_run_ago.days,
+                                 expected_previous_run_ago.seconds // 3600),
+      },
+      'next_update_expected': calendar.timegm(expected_next_run.utctimetuple()),
+      'next_update_expected_ago': {
+        'days': expected_next_run_ago.days,
+        'hours': expected_next_run_ago.seconds // 3600,
+        'formatted': format_time(expected_next_run_ago.days,
+                                 expected_next_run_ago.seconds // 3600),
+      },
+      'last_update': calendar.timegm(last_update.utctimetuple()),
+      'last_update_ago': {
+        'days': last_update_ago.days,
+        'hours': last_update_ago.seconds // 3600,
+        'formatted': format_time(last_update_ago.days,
+                                 last_update_ago.seconds // 3600),
+      },
+    }
+
+
 def describe_table(request, database, table):
   app_name = get_app_name(request)
   db = dbms.get(request.user)
@@ -278,7 +373,8 @@ def describe_table(request, database, table):
         'is_view': table.is_view,
         'properties': table.properties,
         'details': table.details,
-        'stats': table.stats
+        'stats': table.stats,
+        'health': get_table_health_status(table),
     })
   else:  # Render HTML
     renderable = "metastore.mako"
@@ -309,6 +405,7 @@ def describe_table(request, database, table):
       'navigator_url': get_navigator_url(),
       'is_embeddable': request.REQUEST.get('is_embeddable', False),
       'source_type': _get_servername(db),
+      'health': get_table_health_status(table),
     })
 
 

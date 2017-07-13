@@ -117,6 +117,7 @@ var MetastoreDatabase = (function () {
             database: self,
             name: tableMeta.name,
             type: tableMeta.type,
+            health: tableMeta.health,
             comment: tableMeta.comment,
             optimizerEnabled: optimizerEnabled,
             navigatorEnabled: navigatorEnabled,
@@ -384,6 +385,10 @@ var MetastoreTable = (function () {
     self.sourceType = options.sourceType;
     self.name = options.name;
     self.type = options.type;
+    self.health = options.health;
+    $.get('/metastore/table/' + self.database.name + '/' + self.name + '/health').done(function(data) {
+        self.health = data.health.status;
+    });
 
     self.optimizerStats = ko.observable();
     self.optimizerDetails = ko.observable();
@@ -426,6 +431,7 @@ var MetastoreTable = (function () {
     });
     self.tableDetails = ko.observable();
     self.tableStats = ko.observable();
+    self.tableHealth = ko.observable();
     self.refreshingTableStats = ko.observable(false);
     self.showAddTagName = ko.observable(false);
     self.addTagName = ko.observable('');
@@ -505,6 +511,7 @@ var MetastoreTable = (function () {
           if ((typeof data === 'object') && (data !== null)) {
             self.tableDetails(data);
             self.tableStats(data.details.stats);
+            self.tableHealth(data.health);
             self.refreshingTableStats(false);
             self.samples.load();
             self.loaded(true);
