@@ -571,12 +571,8 @@ def autocomplete(request, server=None, database=None, table=None, column=None, n
 
   # append table health data
   if database and not table:
-    db = dbms.get(request.user)
-
     for table in response['tables_meta']:
-        db_table = db.get_table(database, table['name'])
-        health = get_table_health_status(db_table)
-        table['health'] = health['status']
+        table['health'] = 'loading'
 
   response['status'] = 0
 

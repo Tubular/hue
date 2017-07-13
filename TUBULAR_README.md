@@ -28,5 +28,5 @@ docker-compose run --service-ports dev /bin/bash
 >> ./sync.sh
 
 # advice: run only our tests, example:
->>./build/env/bin/hue test specific metastore.tests.metastore.views_test:TestViews.test_warehouse_healt
+>>./build/env/bin/hue test specific metastore.tests.metastore.views_test:TestViews.test_warehouse_health
 ```

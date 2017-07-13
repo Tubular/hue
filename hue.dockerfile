@@ -35,11 +35,12 @@ RUN apt-get install --fix-missing -q -y \
   libgmp3-dev \
   libz-dev
 
-RUN mkdir /hue
-WORKDIR hue
-COPY . /hue
+RUN apt-get install -y tmux vim
+
+RUN mkdir -p /opt/hue
+WORKDIR /opt/hue
+COPY . /opt/hue
 RUN make apps
-RUN apt-get install -y tmux
 EXPOSE 9999
-VOLUME /hue/desktop/
+VOLUME /opt/hue/desktop/
 COPY desktop/conf/pseudo-distributed.ini.tmpl /opt/hue/desktop/conf/pseudo-distributed.ini

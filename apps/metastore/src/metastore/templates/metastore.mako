@@ -370,11 +370,8 @@ ${ components.menubar(is_embeddable) }
       <!-- ko if: status == 'healthy' -->
       <div class="label label-success">
         ${_('Last update was')}
-        <!-- ko if: last_update_ago.days > 0 -->
-        <span data-bind="text: last_update_ago.days"></span> day(s)
-        <!-- /ko -->
-        <span data-bind="text: last_update_ago.hours"></span> hour(s)
-        ago <br/>
+        <span data-bind="text: last_update_ago.formatted"></span>
+        <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>
       <!-- /ko -->
@@ -382,11 +379,8 @@ ${ components.menubar(is_embeddable) }
       <!-- ko if: status == 'unhealthy' -->
       <div class="label label-warning">
         ${_('Last update was')}
-        <!-- ko if: last_update_ago.days > 0 -->
-        <span data-bind="text: last_update_ago.days"></span> day(s)
-        <!-- /ko -->
-        <span data-bind="text: last_update_ago.hours"></span> hour(s)
-        ago <br/>
+        <span data-bind="text: last_update_ago.formatted"></span>
+        <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>
       <!-- /ko -->
@@ -395,10 +389,7 @@ ${ components.menubar(is_embeddable) }
       <div>
         <i class="fa fa-fw fa-clock-o muted" ></i>
         <strong>${_('Next in')}</strong>
-        <!-- ko if: next_update_expected_ago.days > 0 -->
-        <span data-bind="text: next_update_expected_ago.days"></span> day(s)
-        <!-- /ko -->
-        <span data-bind="text: next_update_expected_ago.hours"></span> hour(s)<br/>
+        <span data-bind="text: next_update_expected_ago.formatted"></span>
         (<span data-bind="text: localeFormat(next_update_expected * 1000)"></span>)
       </div>
       <!-- /ko -->
@@ -576,8 +567,12 @@ ${ components.menubar(is_embeddable) }
               <!-- /ko -->
 
               <td class="center">
+                <!-- ko if: health == 'loading' -->
+                <div class="label">loading...</div>
+                <!-- /ko -->
+
                 <!-- ko if: health == 'unknown' -->
-                <div class="label">unknown</div>
+                <div class="label label-info">unknown</div>
                 <!-- /ko -->
 
                 <!-- ko if: health == 'healthy' -->

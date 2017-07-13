@@ -260,6 +260,15 @@ def get_table_metadata(request, database, table):
   return JsonResponse(response)
 
 
+def table_health(request, database, table):
+    db = dbms.get(request.user)
+    db_table = db.get_table(database, table)
+    return JsonResponse({
+        'table': table,
+        'health': get_table_health_status(db_table),
+    })
+
+
 def get_table_health_status(table, at_time=None):
   """Returns table health status.
 
@@ -302,22 +311,42 @@ def get_table_health_status(table, at_time=None):
     else:
       status = 'healthy'
 
+    def _s(n, one, many):
+        if n == 0:
+            return ''
+        elif n == 1:
+            return '{} {}'.format(n, one)
+        else:
+            return '{} {}'.format(n, many)
+
+    def format_time(days, hours):
+        if days == 0 and hours == 0:
+            return 'a few minutes'
+        parts = [_s(days, 'day', 'days'), _s(hours, 'hour', 'hours')]
+        return ' '.join(filter(None, parts)) + ' ago'
+
     return {
       'status': status,
       'last_update_expected': calendar.timegm(expected_previous_run.utctimetuple()),
       'last_update_expected_ago': {
         'days': expected_previous_run_ago.days,
         'hours': expected_previous_run_ago.seconds // 3600,
+        'formatted': format_time(expected_previous_run_ago.days,
+                                 expected_previous_run_ago.seconds // 3600),
       },
       'next_update_expected': calendar.timegm(expected_next_run.utctimetuple()),
       'next_update_expected_ago': {
         'days': expected_next_run_ago.days,
         'hours': expected_next_run_ago.seconds // 3600,
+        'formatted': format_time(expected_next_run_ago.days,
+                                 expected_next_run_ago.seconds // 3600),
       },
       'last_update': calendar.timegm(last_update.utctimetuple()),
       'last_update_ago': {
         'days': last_update_ago.days,
         'hours': last_update_ago.seconds // 3600,
+        'formatted': format_time(last_update_ago.days,
+                                 last_update_ago.seconds // 3600),
       },
     }
 
