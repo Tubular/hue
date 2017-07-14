@@ -100,15 +100,16 @@ ${ hueIcons.symbols() }
   <nav class="navbar navbar-default">
     <div class="navbar-inner top-nav">
       <div class="top-nav-left">
+<!--
         <a class="hamburger hamburger-hue pull-left" data-bind="toggle: leftNavVisible, css: { 'is-active': leftNavVisible }">
           <span class="hamburger-box"><span class="hamburger-inner"></span></span>
         </a>
-
-        <a class="brand" data-bind="hueLink: '/home'" href="javascript: void(0);" title="${_('Documents')}">
+-->
+        <a class="brand" data-bind="hueLink: '/metastore/databases'" href="javascript: void(0);" title="${_('Documents')}">
           <svg style="height: 24px; width: 120px;"><use xlink:href="#hi-logo"></use></svg>
         </a>
 
-
+        <!-- ko if: false -->
         <div class="btn-group" data-bind="visible: true" style="display:none; margin-top: 8px">
           <!-- ko if: mainQuickCreateAction -->
           <!-- ko with: mainQuickCreateAction -->
@@ -125,6 +126,7 @@ ${ hueIcons.symbols() }
             <!-- ko template: 'quick-create-item-template' --><!-- /ko -->
           </ul>
         </div>
+        <!-- /ko -->
 
         <script type="text/html" id="quick-create-item-template">
           <!-- ko if: item.dividerAbove -->
@@ -195,6 +197,7 @@ ${ hueIcons.symbols() }
         </div>
         <!-- /ko -->
 
+        <!-- ko if: false -->
         <div class="search-container-top">
           <input placeholder="${ _('Search data and saved documents...') }" type="text"
             data-bind="autocomplete: {
@@ -212,6 +215,7 @@ ${ hueIcons.symbols() }
               textInput: searchInput,
               valueUpdate: 'afterkeydown'">
         </div>
+        <!-- /ko -->
 
         <script type="text/html" id="top-search-autocomp-item">
           <a href="javascript:void(0);">
@@ -252,10 +256,14 @@ ${ hueIcons.symbols() }
             % if user.is_superuser:
             <li data-bind="hueLink: '/useradmin/users/'"><a href="javascript: void(0);"><i class="fa fa-fw fa-group"></i> ${_('Manage Users')}</a></li>
             % endif
+
+            % if False:
             <li><a href="javascript:void(0)" onclick="huePubSub.publish('set.hue.version', 3)"><i class="fa fa-fw fa-exchange"></i> ${_('Switch to Hue 3')}</a></li>
+            % endif
+
             <li><a href="http://gethue.com" target="_blank"><span class="dropdown-no-icon">${_('Help')}</span></a></li>
             <li><a href="javascript:void(0)" onclick="huePubSub.publish('show.welcome.tour')"><span class="dropdown-no-icon">${_('Welcome Tour')}</span></a></li>
-            % if user.is_superuser:
+            % if user.is_superuser and False:
             <li><a href="/about/"><span class="dropdown-no-icon">${_('Check Configuration')}</span></a></li>
             % endif
             <li class="divider"></li>
@@ -560,7 +568,7 @@ ${ smart_unicode(login_modal(request).content) | n,unicode }
         404: { url: '/404', title: '404' },
         500: { url: '/500', title: '500' },
         editor: { url: '/editor', title: '${_('Editor')}' },
-        notebook: { url: '/notebook', title: '${_('Notebook')}' },
+       // notebook: { url: '/notebook', title: '${_('Notebook')}' },
         metastore: { url: '/metastore/*', title: '${_('Table Browser')}' },
         dashboard: { url: '/dashboard/*', title: '${_('Dashboard')}' },
         oozie_workflow: { url: '/oozie/editor/workflow/*', title: '${_('Workflow')}' },
@@ -569,7 +577,7 @@ ${ smart_unicode(login_modal(request).content) | n,unicode }
         oozie_info: { url: '/oozie/list_oozie_info', title: '${_('Oozie')}' },
         jobbrowser: { url: '/jobbrowser/apps', title: '${_('Job Browser')}' },
         filebrowser: { url: '/filebrowser/view=*', title: '${_('File Browser')}' },
-        home: { url: '/home*', title: '${_('Home')}' },
+      //  home: { url: '/home*', title: '${_('Home')}' },
         indexer: { url: '/indexer/indexer/', title: '${_('Indexer')}' },
         collections: { url: '/dashboard/admin/collections', title: '${_('Search')}' },
         indexes: { url: '/indexer/', title: '${_('Indexes')}' },

@@ -1510,7 +1510,7 @@ from notebook.conf import get_ordered_interpreters
 
             if (self.tabsEnabled) {
 
-              if (appConfig['browser'] && appConfig['browser']['interpreter_names'].indexOf('hdfs') != -1) {
+              if (false && appConfig['browser'] && appConfig['browser']['interpreter_names'].indexOf('hdfs') != -1) {
                 panels.push(new AssistInnerPanel({
                   panelData: new AssistHdfsPanel({
                     apiHelper: self.apiHelper
@@ -1569,21 +1569,21 @@ from notebook.conf import get_ordered_interpreters
                   showNavSearch: false
                 }));
               }
-
-              panels.push(new AssistInnerPanel({
-                panelData: new AssistDocumentsPanel({
-                  user: params.user,
-                  apiHelper: self.apiHelper
-                }),
-                apiHelper: self.apiHelper,
-                name: '${ _("Documents") }',
-                type: 'documents',
-                icon: 'fa-files-o',
-                minHeight: 50,
-                rightAlignIcon: true,
-                visible: params.visibleAssistPanels && params.visibleAssistPanels.indexOf('documents') !== -1
-              }));
-
+//
+//              panels.push(new AssistInnerPanel({
+//                panelData: new AssistDocumentsPanel({
+//                  user: params.user,
+//                  apiHelper: self.apiHelper
+//                }),
+//                apiHelper: self.apiHelper,
+//                name: '${ _("Documents") }',
+//                type: 'documents',
+//                icon: 'fa-files-o',
+//                minHeight: 50,
+//                rightAlignIcon: true,
+//                visible: params.visibleAssistPanels && params.visibleAssistPanels.indexOf('documents') !== -1
+//              }));
+//
               var vcsKeysLength = ${ len(VCS.keys()) };
               if (vcsKeysLength > 0) {
                 panels.push(new AssistInnerPanel({
