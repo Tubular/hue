@@ -388,9 +388,12 @@ ${ components.menubar(is_embeddable) }
       <!-- ko if: status !== 'unknown' -->
       <div>
         <i class="fa fa-fw fa-clock-o muted" ></i>
-        <strong>${_('Next in')}</strong>
+        <small>
+        ${_('Next in')}
         <span data-bind="text: next_update_expected_ago.formatted"></span>
+        <br/>
         (<span data-bind="text: localeFormat(next_update_expected * 1000)"></span>)
+        </small>
       </div>
       <!-- /ko -->
 
@@ -572,7 +575,15 @@ ${ components.menubar(is_embeddable) }
                 <!-- /ko -->
 
                 <!-- ko if: health == 'unknown' -->
-                <div class="label label-info">unknown</div>
+                <div class="label">unknown</div>
+                <!-- /ko -->
+
+                <!-- ko if: health == 'ondemand' -->
+                <div class="label label-info">ondemand</div>
+                <!-- /ko -->
+
+                <!-- ko if: health == 'deprecated' -->
+                <div class="label label-warning">deprecated</div>
                 <!-- /ko -->
 
                 <!-- ko if: health == 'healthy' -->
@@ -580,7 +591,7 @@ ${ components.menubar(is_embeddable) }
                 <!-- /ko -->
 
                 <!-- ko if: health == 'unhealthy' -->
-                <div class="label label-warning">unhealthy</div>
+                <div class="label label-danger">unhealthy</div>
                 <!-- /ko -->
               </td>
 
