@@ -385,9 +385,9 @@ var MetastoreTable = (function () {
     self.sourceType = options.sourceType;
     self.name = options.name;
     self.type = options.type;
-    self.health = options.health;
+    self.health = ko.observable(options.health);
     $.get('/metastore/table/' + self.database.name + '/' + self.name + '/health').done(function(data) {
-        self.health = data.health.status;
+        self.health(data.health.status);
     });
 
     self.optimizerStats = ko.observable();

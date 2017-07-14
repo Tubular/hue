@@ -570,27 +570,27 @@ ${ components.menubar(is_embeddable) }
               <!-- /ko -->
 
               <td class="center">
-                <!-- ko if: health == 'loading' -->
+                <!-- ko if: health() == 'loading' -->
                 <div class="label">loading...</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'unknown' -->
+                <!-- ko if: health() == 'unknown' -->
                 <div class="label">unknown</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'ondemand' -->
+                <!-- ko if: health() == 'ondemand' -->
                 <div class="label label-info">ondemand</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'deprecated' -->
+                <!-- ko if: health() == 'deprecated' -->
                 <div class="label label-warning">deprecated</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'healthy' -->
+                <!-- ko if: health() == 'healthy' -->
                 <div class="label label-success">healthy</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'unhealthy' -->
+                <!-- ko if: health() == 'unhealthy' -->
                 <div class="label label-danger">unhealthy</div>
                 <!-- /ko -->
               </td>
