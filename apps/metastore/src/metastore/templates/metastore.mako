@@ -367,6 +367,14 @@ ${ components.menubar(is_embeddable) }
       <div class="label">${_('Unknown')}</div>
       <!-- /ko -->
 
+      <!-- ko if: status == 'ondemand' -->
+      <div class="label label-info">ondemand</div>
+      <!-- /ko -->
+
+      <!-- ko if: status == 'deprecated' -->
+      <div class="label label-warning">deprecated</div>
+      <!-- /ko -->
+
       <!-- ko if: status == 'healthy' -->
       <div class="label label-success">
         ${_('Last update was')}
@@ -385,12 +393,15 @@ ${ components.menubar(is_embeddable) }
       </div>
       <!-- /ko -->
 
-      <!-- ko if: status !== 'unknown' -->
+      <!-- ko if: (status == 'healthy' || status == 'unhealthy') -->
       <div>
         <i class="fa fa-fw fa-clock-o muted" ></i>
-        <strong>${_('Next in')}</strong>
+        <small>
+        ${_('Next in')}
         <span data-bind="text: next_update_expected_ago.formatted"></span>
+        <br/>
         (<span data-bind="text: localeFormat(next_update_expected * 1000)"></span>)
+        </small>
       </div>
       <!-- /ko -->
 
@@ -567,20 +578,28 @@ ${ components.menubar(is_embeddable) }
               <!-- /ko -->
 
               <td class="center">
-                <!-- ko if: health == 'loading' -->
+                <!-- ko if: health() == 'loading' -->
                 <div class="label">loading...</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'unknown' -->
-                <div class="label label-info">unknown</div>
+                <!-- ko if: health() == 'unknown' -->
+                <div class="label">unknown</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'healthy' -->
+                <!-- ko if: health() == 'ondemand' -->
+                <div class="label label-info">ondemand</div>
+                <!-- /ko -->
+
+                <!-- ko if: health() == 'deprecated' -->
+                <div class="label label-warning">deprecated</div>
+                <!-- /ko -->
+
+                <!-- ko if: health() == 'healthy' -->
                 <div class="label label-success">healthy</div>
                 <!-- /ko -->
 
-                <!-- ko if: health == 'unhealthy' -->
-                <div class="label label-warning">unhealthy</div>
+                <!-- ko if: health() == 'unhealthy' -->
+                <div class="label label-danger">unhealthy</div>
                 <!-- /ko -->
               </td>
 
@@ -694,6 +713,9 @@ ${ components.menubar(is_embeddable) }
   <div class="inline-block pull-right">
     <!-- ko with: database -->
     <!-- ko with: table -->
+
+    % if False:
+
     % if USE_NEW_EDITOR.get():
     <!-- ko if: IS_HUE_4 -->
       <a class="inactive-action" data-bind="tooltip: { placement: 'bottom', delay: 750 }, click: function() { queryAndWatch('/notebook/browse/' + database.name + '/' + name + '/', $root.sourceType()); }" title="${_('Query the table')}" href="javascript:void(0)"><i class="fa fa-play fa-fw"></i></a>
@@ -704,6 +726,9 @@ ${ components.menubar(is_embeddable) }
     % else:
       <a class="inactive-action" data-bind="tooltip: { placement: 'bottom', delay: 750 }, attr: { 'href': '/metastore/table/'+ database.name + '/' + name + '/read' }" title="${_('Browse Data')}"><i class="fa fa-play fa-fw"></i></a>
     % endif
+
+    % endif
+
     <a class="inactive-action" data-bind="tooltip: { placement: 'bottom', delay: 750 }, click: function () { huePubSub.publish('assist.db.refresh', { sourceType: $root.sourceType() }); }" title="${_('Refresh')}" href="javascript:void(0)"><i class="pointer fa fa-refresh fa-fw" data-bind="css: { 'fa-spin blue' : $root.reloading }"></i></a>
     % if has_write_access:
       <a class="inactive-action" href="#" data-bind="tooltip: { placement: 'bottom', delay: 750 }, click: showImportData, visible: tableDetails() && ! tableDetails().is_view" title="${_('Import Data')}"><i class="fa fa-upload fa-fw"></i></a>

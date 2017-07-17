@@ -67,6 +67,8 @@ def is_alive(request):
 
 
 def hue(request):
+  if request.path == '/' or request.path == '/hue/home':
+    return redirect('/hue/metastore/databases')
   apps = appmanager.get_apps_dict(request.user)
   default_cluster_index, default_cluster_interface = Cluster(request.user).get_list_interface_indexes()
 

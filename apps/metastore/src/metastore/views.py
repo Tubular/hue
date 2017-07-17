@@ -297,8 +297,8 @@ def get_table_health_status(table, at_time=None):
   )
   last_update_ago = at_time - last_update
   cron_schedule = table.details['stats'].get('cron_schedule', 'unknown')
-  if cron_schedule == 'unknown':
-    return {'status': 'unknown'}
+  if cron_schedule in ['unknown', 'deprecated', 'ondemand', 'stale']:
+    return {'status': cron_schedule}
   else:
     expected_previous_run_ago = timedelta(seconds=-CronTab(cron_schedule).previous())
     expected_previous_run = at_time - expected_previous_run_ago

@@ -111,11 +111,8 @@ dynamic_patterns += patterns('desktop.views',
   # Unsupported browsers
   (r'^boohoo$','unsupported'),
 
-)
-
-dynamic_patterns += patterns('metastore.views',
   # Top level web page!
-  (r'^$', 'index'),
+  (r'^$', 'hue'),
 )
 
 dynamic_patterns += patterns('desktop.api',

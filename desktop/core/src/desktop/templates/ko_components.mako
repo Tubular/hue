@@ -380,10 +380,10 @@ from desktop.views import _ko
         });
       };
 
-      ko.components.register('hue-history-panel', {
-        viewModel: HistoryPanel,
-        template: { element: 'hue-history-panel-template' }
-      });
+//      ko.components.register('hue-history-panel', {
+//        viewModel: HistoryPanel,
+//        template: { element: 'hue-history-panel-template' }
+//      });
     })();
   </script>
 
