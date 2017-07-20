@@ -1526,7 +1526,7 @@ from notebook.conf import get_ordered_interpreters
                 }));
               }
 
-              if (appConfig['browser'] && appConfig['browser']['interpreter_names'].indexOf('s3') != -1) {
+              if (false && appConfig['browser'] && appConfig['browser']['interpreter_names'].indexOf('s3') != -1) {
                 panels.push(new AssistInnerPanel({
                   panelData: new AssistS3Panel({
                     apiHelper: self.apiHelper
