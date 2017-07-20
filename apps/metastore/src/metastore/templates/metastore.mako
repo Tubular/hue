@@ -378,7 +378,7 @@ ${ components.menubar(is_embeddable) }
       <!-- ko if: status == 'healthy' -->
       <div class="label label-success">
         ${_('Last update was')}
-        <span data-bind="text: last_update_ago.formatted"></span>
+        <span data-bind="text: last_update_ago.formatted"></span> ago
         <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>
