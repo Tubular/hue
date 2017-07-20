@@ -323,7 +323,7 @@ def get_table_health_status(table, at_time=None):
         if days == 0 and hours == 0:
             return 'a few minutes'
         parts = [_s(days, 'day', 'days'), _s(hours, 'hour', 'hours')]
-        return ' '.join(filter(None, parts)) + ' ago'
+        return ' '.join(filter(None, parts))
 
     return {
       'status': status,

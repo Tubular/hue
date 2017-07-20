@@ -385,9 +385,9 @@ ${ components.menubar(is_embeddable) }
       <!-- /ko -->
 
       <!-- ko if: status == 'unhealthy' -->
-      <div class="label label-warning">
+      <div class="label label-danger">
         ${_('Last update was')}
-        <span data-bind="text: last_update_ago.formatted"></span>
+        <span data-bind="text: last_update_ago.formatted"></span> ago
         <br/>
         (<span data-bind="text: localeFormat(last_update * 1000)"></span>)
       </div>

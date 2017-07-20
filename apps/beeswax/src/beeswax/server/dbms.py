@@ -372,7 +372,7 @@ class HiveServer2Dbms(object):
 
     if hql:
       query = hql_query(hql)
-      handle = self.execute_and_wait(query, timeout_sec=5.0)
+      handle = self.execute_and_wait(query, timeout_sec=120.0)
 
       if handle:
         result = self.fetch(handle, rows=100)
