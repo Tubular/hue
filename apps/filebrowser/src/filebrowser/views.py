@@ -485,7 +485,8 @@ def listdir_paged(request, path):
                        (request.fs.isdir(_home_trash_path(request.fs, request.user, path)) or
                         request.fs.isdir(request.fs.trash_path(path)))
 
-    is_fs_superuser = _is_hdfs_superuser(request)
+    # We don't use hdfs
+    is_fs_superuser = False # _is_hdfs_superuser(request)
     data = {
         'path': path,
         'breadcrumbs': breadcrumbs,
@@ -494,7 +495,8 @@ def listdir_paged(request, path):
         'files': page.object_list if page else [],
         'page': _massage_page(page) if page else {},
         'pagesize': pagesize,
-        'home_directory': request.fs.isdir(home_dir_path) and home_dir_path or None,
+        #'home_directory': request.fs.isdir(home_dir_path) and home_dir_path or None,
+        'home_directory': None,
         'descending': descending_param,
         # The following should probably be deprecated
         'cwd_set': True,
