@@ -173,6 +173,8 @@ def download(request, path):
 
 def view(request, path):
     """Dispatches viewing of a path to either index() or fileview(), depending on type."""
+    if path.startswith('s3://'):
+        path = 's3a' + path[2:]
 
     # default_to_home is set in bootstrap.js
     if 'default_to_home' in request.GET:
