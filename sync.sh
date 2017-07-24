@@ -8,4 +8,5 @@ cp -rf /code/apps/metastore/ /opt/hue/apps/
 cp -rf /code/apps/beeswax/ /opt/hue/apps/
 cp -rf /code/desktop/core/src/desktop /opt/hue/desktop/core/src/
 cp -rf /code/desktop/libs/notebook /opt/hue/desktop/libs/
+cp -rf /code/desktop/libs/aws /opt/hue/desktop/libs/
 cp -rf /code/apps/filebrowser/ /opt/hue/apps/
