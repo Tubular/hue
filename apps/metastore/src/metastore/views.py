@@ -274,7 +274,8 @@ def get_table_health_status(table, at_time=None):
 
   We calculate table health based on specific metadata feilds.
   We rely on next fields:
-    * last_castor_run_ts - timestamp of last update, set by tool-castor.
+    * warehouse_last_update_ts - timestamp of last _update, set by warehouse writer (new).
+    * last_castor_run_ts - timestamp of last update, set by tool-castor (old).
     * transient_lastDdlTime - timestamp of last update, set by Hive on each table update (fallback).
     * cron_schedule - cron definition of planned update schedule.
 
@@ -291,6 +292,7 @@ def get_table_health_status(table, at_time=None):
   at_time = at_time or datetime.utcnow()
   last_update = datetime.utcfromtimestamp(
     float(
+        table.details['stats'].get('warehouse_last_update_ts') or
         table.details['stats'].get('last_castor_run_ts') or
         table.details['stats']['transient_lastDdlTime']
     )
